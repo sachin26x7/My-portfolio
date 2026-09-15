@@ -74,7 +74,7 @@ app.put('/api/portfolio', requireOwner, async (request, response) => {
   const saved = await Portfolio.findOneAndUpdate(
     { key: 'main' },
     { key: 'main', data: request.body },
-    { new: true, upsert: true, setDefaultsOnInsert: true }
+    { returnDocument: 'after', upsert: true, setDefaultsOnInsert: true }
   ).lean();
   response.json(publicData(saved.data));
 });
