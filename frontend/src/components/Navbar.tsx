@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon, Menu, X, FileText, Settings, Sparkles } from 'lucide-react';
+import { Menu, X, FileText, Settings, Sparkles } from 'lucide-react';
 
 interface NavItem {
   name: string;
@@ -18,7 +17,6 @@ const navItems: NavItem[] = [
 
 export const Navbar: React.FC = () => {
   const { data, setIsAdminModalOpen, isOwner } = usePortfolio();
-  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [scrolled, setScrolled] = useState(false);
@@ -114,19 +112,6 @@ export const Navbar: React.FC = () => {
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center gap-2">
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.07] border border-white/[0.07] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-amber-400" />
-              ) : (
-                <Moon className="w-4 h-4 text-slate-300" />
-              )}
-            </button>
-
             {/* Resume Button */}
             <a
               href={data.resumeUrl}
@@ -154,14 +139,6 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile controls */}
           <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle theme"
-              className="p-2 rounded-lg text-slate-400 hover:bg-white/[0.07]"
-            >
-              {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-300" />}
-            </button>
-
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Open menu"
