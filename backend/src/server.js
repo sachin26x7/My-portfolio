@@ -6,11 +6,20 @@ import jwt from 'jsonwebtoken';
 
 const app = express();
 const port = process.env.PORT || 5000;
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000')
-  .split(',')
+const configuredOrigins = [
+  'http://localhost:3000',
+  ...(process.env.FRONTEND_URL || '').split(',')
+]
+  .filter(Boolean)
   .map((origin) => origin.trim().replace(/\/$/, ''));
 
-app.use(cors({ origin: allowedOrigins }));
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (configuredOrigins.includes(origin)) return true;
+  return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+};
+
+app.use(cors({ origin: (origin, callback) => callback(null, isAllowedOrigin(origin)) }));
 app.use(express.json({ limit: '2mb' }));
 
 const portfolioSchema = new mongoose.Schema({
@@ -43,7 +52,7 @@ app.get('/api/health', (_request, response) => {
 
 app.get('/api/portfolio', async (_request, response) => {
   const portfolio = await Portfolio.findOne({ key: 'main' }).lean();
-  if (!portfolio) return response.status(404).json({ message: 'Portfolio has not been saved yet' });
+  if (!portfolio) return response.json({});
   response.json(publicData(portfolio.data));
 });
 
