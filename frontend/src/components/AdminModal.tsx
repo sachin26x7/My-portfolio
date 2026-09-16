@@ -97,6 +97,15 @@ export const AdminModal: React.FC = () => {
     setTimeout(() => setCopiedJSON(false), 2000);
   };
 
+  const handleUpdateSocialUrl = (icon: 'github' | 'linkedin', url: string) => {
+    setFormData({
+      ...formData,
+      socials: formData.socials.map((social) =>
+        social.icon === icon ? { ...social, url } : social
+      )
+    });
+  };
+
   // Helper to add a new project
   const handleAddProject = () => {
     const newProj: ProjectItem = {
@@ -439,6 +448,26 @@ export const AdminModal: React.FC = () => {
                       className="w-full px-3 py-2.5 rounded-xl bg-[#17181d]/70 border border-[#f1d2b8]/10 text-[#fffaf5] text-sm focus:outline-none focus:border-[#f3b68d] focus:ring-1 focus:ring-[#f3b68d]/25 transition-all placeholder-[#d9b99b] shadow-[inset_0_2px_8px_rgba(0,0,0,0.20)]"
                     />
                   </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {(['github', 'linkedin'] as const).map((icon) => {
+                      const social = formData.socials.find((item) => item.icon === icon);
+                      return (
+                        <div key={icon}>
+                          <label className="block text-[10px] font-mono uppercase tracking-widest text-[#f4d8c5] mb-1.5">
+                            {icon === 'github' ? 'GitHub Profile URL' : 'LinkedIn Profile URL'}
+                          </label>
+                          <input
+                            type="url"
+                            value={social?.url || ''}
+                            onChange={(e) => handleUpdateSocialUrl(icon, e.target.value)}
+                            placeholder={`https://${icon}.com/your-profile`}
+                            className="w-full px-3 py-2.5 rounded-xl bg-[#0f1728] border border-white/[0.08] text-white text-sm focus:outline-none focus:border-[#ff7a59] focus:ring-1 focus:ring-[#ff7a59]/25 transition-all placeholder-slate-600"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
@@ -521,6 +550,56 @@ export const AdminModal: React.FC = () => {
                               className="w-full p-1.5 rounded-lg bg-white/[0.04] border border-white/[0.07] text-slate-300 text-xs focus:outline-none focus:border-primary-500/50"
                             />
                           </div>
+                        </div>
+
+                        {/* ── Technologies Used (Tags) ── */}
+                        <div className="pt-1 space-y-1.5">
+                          <span className="text-[10px] uppercase font-mono text-slate-400 block">
+                            Technologies Used <span className="normal-case text-slate-600">(comma separated)</span>
+                          </span>
+                          <div className="flex flex-wrap gap-1.5 mb-1.5">
+                            {proj.tags.map((tag, tIdx) => (
+                              <span
+                                key={tIdx}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-primary-500/10 border border-primary-500/30 text-primary-400 text-[11px] font-mono"
+                              >
+                                {tag}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newTags = proj.tags.filter((_, i) => i !== tIdx);
+                                    handleUpdateProject(idx, 'tags', newTags);
+                                  }}
+                                  className="hover:text-red-400 transition-colors ml-0.5"
+                                  title={`Remove ${tag}`}
+                                >
+                                  <X className="w-2.5 h-2.5" />
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                          <input
+                            type="text"
+                            placeholder="e.g. React.js, Node.js, MongoDB — press Enter or comma to add"
+                            className="w-full p-1.5 rounded-lg bg-white/[0.04] border border-white/[0.07] text-slate-300 text-xs focus:outline-none focus:border-primary-500/50 placeholder-slate-600"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ',') {
+                                e.preventDefault();
+                                const val = (e.target as HTMLInputElement).value.trim().replace(/,$/, '');
+                                if (val && !proj.tags.includes(val)) {
+                                  handleUpdateProject(idx, 'tags', [...proj.tags, val]);
+                                }
+                                (e.target as HTMLInputElement).value = '';
+                              }
+                            }}
+                            onBlur={(e) => {
+                              const val = e.target.value.trim().replace(/,$/, '');
+                              if (val && !proj.tags.includes(val)) {
+                                handleUpdateProject(idx, 'tags', [...proj.tags, val]);
+                              }
+                              e.target.value = '';
+                            }}
+                          />
                         </div>
 
                         {/* ── Project Image ── */}
