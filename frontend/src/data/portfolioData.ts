@@ -39,7 +39,7 @@ export const initialPortfolioData: ProfileData = {
       id: "stat-3",
       label: "DSA Problems Solved",
       value: "250+",
-      description: "LeetCode & HackerRank"
+      description: "LeetCode & GFG"
     },
     {
       id: "stat-4",
