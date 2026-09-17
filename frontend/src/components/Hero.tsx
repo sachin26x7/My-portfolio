@@ -60,30 +60,10 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Main Heading */}
-        <div className="space-y-3">
-          {(() => {
-            const fullName = (data.name || 'Your Name').trim();
-            const nameParts = fullName.split(/\s+/);
-            const accentName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
-            const mainName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : fullName;
-
-            return (
-              <>
-                <h1 className="text-center leading-[0.8] tracking-[-0.075em] font-display font-black">
-                  <span className="block text-white text-[clamp(2.6rem,5vw,7rem)] whitespace-nowrap">Hi, I'm</span>
-                  <span className="block text-gradient-coral text-[clamp(3.4rem,8vw,17rem)] whitespace-nowrap">{mainName}</span>
-                </h1>
-
-                {accentName && (
-                  <div className="flex justify-center">
-                    <span className="inline-flex items-center justify-center min-w-[150px] sm:min-w-[200px] md:min-w-[260px] h-[150px] sm:h-[180px] md:h-[220px] px-4 rounded-[1.25rem] bg-[#8bbad2]/85 shadow-[0_18px_50px_-18px_rgba(139,186,210,0.9)]">
-                      <span className="text-slate-950 text-[clamp(4rem,8vw,12rem)] font-black tracking-[-0.07em] leading-none">{accentName}</span>
-                    </span>
-                  </div>
-                )}
-              </>
-            );
-          })()}
+        <div className="space-y-2">
+          <h1 className="text-center leading-[0.72] tracking-[-0.085em] font-display font-black whitespace-nowrap text-[clamp(2.1rem,4.8vw,9.5rem)] text-gradient-coral" style={{ letterSpacing: '-0.06em', wordSpacing: '0.08em' }}>
+            {data.name || 'Your Name'}
+          </h1>
 
           {/* Typing Effect */}
           <div className="flex items-center justify-center gap-3 text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-300 min-h-[52px]">
