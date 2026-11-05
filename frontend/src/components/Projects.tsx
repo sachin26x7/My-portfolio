@@ -1,7 +1,8 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { ExternalLink, Github, FolderGit2, Sparkles } from 'lucide-react';
+import { Award, ExternalLink, FolderGit2, Github } from 'lucide-react';
 import { MotionCard } from './MotionCard';
+import { resolveImageUrl } from '../imageUrl';
 
 export const Projects: React.FC = () => {
   const { data } = usePortfolio();
@@ -34,7 +35,7 @@ export const Projects: React.FC = () => {
             {/* Thumbnail Image Container */}
             <div className="relative h-48 w-full overflow-hidden rounded-t-2xl bg-slate-900">
               <img
-                src={project.image}
+                src={resolveImageUrl(project.image)}
                 alt={project.title}
                 loading="lazy"
                 className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100"
@@ -51,7 +52,7 @@ export const Projects: React.FC = () => {
               {project.featured && (
                 <div className="absolute top-3 right-3">
                   <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-mono font-medium icon-box-purple text-white shadow">
-                    <Sparkles className="w-3 h-3" />
+                    <Award className="w-3 h-3" />
                     Featured
                   </span>
                 </div>

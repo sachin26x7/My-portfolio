@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { Menu, X, FileText, Settings, Sparkles } from 'lucide-react';
+import { BadgeCheck, CodeXml, FileText, Menu, Settings, X } from 'lucide-react';
 
 interface NavItem {
   name: string;
@@ -75,8 +75,8 @@ export const Navbar: React.FC = () => {
             onClick={(e) => handleNavClick(e, '#hero')}
             className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-xl p-1"
           >
-            <div className="w-9 h-9 rounded-xl icon-box-cyan flex items-center justify-center text-white font-bold font-mono text-base shadow-glow-cyan group-hover:scale-105 transition-transform duration-200">
-              &lt;/&gt;
+            <div className="w-9 h-9 rounded-xl icon-box-cyan flex items-center justify-center text-white shadow-glow-cyan group-hover:scale-105 transition-transform duration-200">
+              <CodeXml className="w-5 h-5" aria-hidden="true" />
             </div>
             <div className="flex flex-col">
               <span className="font-display font-bold text-white tracking-tight group-hover:text-primary-400 transition-colors">
@@ -133,7 +133,7 @@ export const Navbar: React.FC = () => {
                   : 'text-slate-500 hover:text-slate-200 border-white/[0.07] hover:bg-white/[0.07]'
               }`}
             >
-              {isOwner ? <Sparkles className="w-4 h-4 text-primary-400" /> : <Settings className="w-4 h-4" />}
+              {isOwner ? <BadgeCheck className="w-4 h-4 text-primary-400" /> : <Settings className="w-4 h-4" />}
             </button>
           </div>
 
@@ -197,4 +197,3 @@ export const Navbar: React.FC = () => {
     </header>
   );
 };
-

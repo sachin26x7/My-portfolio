@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { ArrowUp, Heart, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowUp, BadgeCheck, CodeXml, Heart, ShieldCheck } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const { data, setIsAdminModalOpen, isOwner } = usePortfolio();
@@ -17,8 +17,8 @@ export const Footer: React.FC = () => {
         {/* Left: Brand & Tag */}
         <div className="flex flex-col items-center md:items-start gap-1 text-center md:text-left">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg icon-box-cyan flex items-center justify-center text-white font-bold font-mono text-xs">
-              &lt;/&gt;
+            <div className="w-7 h-7 rounded-lg icon-box-cyan flex items-center justify-center text-white">
+              <CodeXml className="w-4 h-4" aria-hidden="true" />
             </div>
             <span className="font-display font-bold text-white tracking-tight">
               {data.name}
@@ -48,7 +48,7 @@ export const Footer: React.FC = () => {
           >
             {isOwner ? (
               <>
-                <Sparkles className="w-3.5 h-3.5 text-primary-400" />
+                <BadgeCheck className="w-3.5 h-3.5 text-primary-400" />
                 <span>Owner Studio (Unlocked)</span>
               </>
             ) : (

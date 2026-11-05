@@ -1,7 +1,8 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { Sparkles, MapPin, CheckCircle2, Cpu, Database, Code2 } from 'lucide-react';
+import { CheckCircle2, Code2, CodeXml, Database, MapPin, Server, UserRound } from 'lucide-react';
 import { MotionCard } from './MotionCard';
+import { resolveImageUrl } from '../imageUrl';
 
 export const About: React.FC = () => {
   const { data } = usePortfolio();
@@ -12,7 +13,7 @@ export const About: React.FC = () => {
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.05] backdrop-blur-sm">
-          <Sparkles className="w-3.5 h-3.5 text-primary-400" />
+          <UserRound className="w-3.5 h-3.5 text-primary-400" />
           <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-slate-400">About Me</span>
         </div>
         <h2 className="text-3xl sm:text-4xl font-display font-extrabold tracking-tight text-white">
@@ -59,7 +60,7 @@ export const About: React.FC = () => {
             </MotionCard>
             <MotionCard className="portfolio-card-3d p-5 rounded-2xl press-card hover:border-purple-500/20 transition-all duration-300 hover:-translate-y-1 space-y-3">
               <div className="w-10 h-10 icon-box-purple flex items-center justify-center">
-                <Cpu className="w-5 h-5 text-white" />
+                <Server className="w-5 h-5 text-white" />
               </div>
               <h4 className="font-display font-bold text-white text-sm">Node &amp; Express APIs</h4>
               <p className="text-xs text-slate-400">RESTful routing, JWT &amp; Middleware</p>
@@ -85,7 +86,7 @@ export const About: React.FC = () => {
 
             <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-slate-900 shadow-2xl group">
               <img
-                src={data.avatarUrl}
+                src={resolveImageUrl(data.avatarUrl)}
                 alt={data.name}
                 loading="lazy"
                 className="w-full h-96 object-cover object-center group-hover:scale-105 transition-transform duration-500"
@@ -99,7 +100,7 @@ export const About: React.FC = () => {
                   <p className="text-sm font-bold text-white">{data.name}</p>
                 </div>
                 <div className="w-8 h-8 icon-box-cyan flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
+                  <CodeXml className="w-4 h-4 text-white" />
                 </div>
               </div>
             </div>

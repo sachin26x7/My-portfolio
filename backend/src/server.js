@@ -20,7 +20,7 @@ const isAllowedOrigin = (origin) => {
 };
 
 app.use(cors({ origin: (origin, callback) => callback(null, isAllowedOrigin(origin)) }));
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({ limit: '10mb' }));
 
 const portfolioSchema = new mongoose.Schema({
   key: { type: String, unique: true, default: 'main' },

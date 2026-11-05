@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePortfolio, AdminTab } from '../context/PortfolioContext';
 import { ProfileData, ProjectItem, ExperienceItem, SkillCategory } from '../types/portfolio';
+import { resolveImageUrl } from '../imageUrl';
 import { 
   X, 
   Lock, 
@@ -20,7 +21,8 @@ import {
   Briefcase,
   Wrench,
   Upload,
-  ImageIcon
+  ImageIcon,
+  ArrowRight
 } from 'lucide-react';
 
 export const AdminModal: React.FC = () => {
@@ -44,6 +46,7 @@ export const AdminModal: React.FC = () => {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [copiedJSON, setCopiedJSON] = useState(false);
   const [saveError, setSaveError] = useState('');
+  const [avatarUploadError, setAvatarUploadError] = useState('');
 
   // Sync formData and initial tab whenever modal opens or data changes
   useEffect(() => {
@@ -75,6 +78,30 @@ export const AdminModal: React.FC = () => {
     } else {
       setSaveError('Could not save changes. Check the backend URL and connection.');
     }
+  };
+
+  const handleAvatarUpload = (file?: File) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setAvatarUploadError('Choose an image file to upload.');
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      setAvatarUploadError('Image must be 4 MB or smaller.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result !== 'string') {
+        setAvatarUploadError('Could not read this image. Please try another file.');
+        return;
+      }
+      setFormData(current => ({ ...current, avatarUrl: reader.result as string }));
+      setAvatarUploadError('');
+    };
+    reader.onerror = () => setAvatarUploadError('Could not read this image. Please try another file.');
+    reader.readAsDataURL(file);
   };
 
   const handleReset = async () => {
@@ -312,7 +339,7 @@ export const AdminModal: React.FC = () => {
                 type="submit"
                 className="w-full py-3 rounded-xl bg-[linear-gradient(135deg,#f4c39d,#d97b4a)] text-[#1f1a1a] font-bold text-sm shadow-[0_12px_30px_rgba(217,119,66,0.35),inset_0_2px_0_rgba(255,255,255,0.2)] transition-all hover:brightness-110 hover:-translate-y-0.5"
               >
-                Unlock Studio →
+                Unlock Studio <ArrowRight className="ml-1 inline h-4 w-4" aria-hidden="true" />
               </button>
             </form>
           </div>
@@ -447,6 +474,41 @@ export const AdminModal: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
                       className="w-full px-3 py-2.5 rounded-xl bg-[#17181d]/70 border border-[#f1d2b8]/10 text-[#fffaf5] text-sm focus:outline-none focus:border-[#f3b68d] focus:ring-1 focus:ring-[#f3b68d]/25 transition-all placeholder-[#d9b99b] shadow-[inset_0_2px_8px_rgba(0,0,0,0.20)]"
                     />
+                    <div className="mt-2 flex items-center gap-3">
+                      <label
+                        htmlFor="avatar-image-upload"
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#f1d2b8]/15 bg-white/[0.04] text-[#f2d9c8] text-xs font-medium cursor-pointer hover:bg-white/[0.08] transition-colors"
+                      >
+                        <Upload className="w-3.5 h-3.5" aria-hidden="true" />
+                        Upload portrait
+                      </label>
+                      <input
+                        id="avatar-image-upload"
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={(event) => {
+                          handleAvatarUpload(event.target.files?.[0]);
+                          event.target.value = '';
+                        }}
+                      />
+                      <span className="text-[10px] text-[#d9b99b]">Images up to 4 MB</span>
+                      <div className="relative ml-auto w-12 h-12 shrink-0 rounded-lg overflow-hidden border border-[#f1d2b8]/15 bg-[#17181d] flex items-center justify-center">
+                        <ImageIcon className="w-4 h-4 text-[#d9b99b]" aria-hidden="true" />
+                        {formData.avatarUrl && (
+                          <img
+                            src={resolveImageUrl(formData.avatarUrl)}
+                            alt="Portrait preview"
+                            className="absolute inset-0 w-full h-full object-cover"
+                            onError={(event) => { event.currentTarget.style.display = 'none'; }}
+                            onLoad={(event) => { event.currentTarget.style.display = 'block'; }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                    {avatarUploadError && (
+                      <p className="mt-1.5 text-xs text-red-300" role="alert">{avatarUploadError}</p>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -610,7 +672,7 @@ export const AdminModal: React.FC = () => {
                           {proj.image && (
                             <div className="relative w-full h-28 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-dark-900">
                               <img
-                                src={proj.image}
+                                src={resolveImageUrl(proj.image)}
                                 alt="Project thumbnail"
                                 className="w-full h-full object-cover"
                                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -1005,7 +1067,7 @@ export const AdminModal: React.FC = () => {
                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl btn-neon-cyan text-white font-semibold text-xs transition-all"
                   >
                     {copiedJSON ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    <span>{copiedJSON ? '✓ Copied to Clipboard!' : 'Copy Configuration JSON'}</span>
+                    <span>{copiedJSON ? 'Copied to Clipboard!' : 'Copy Configuration JSON'}</span>
                   </button>
                 </div>
               )}

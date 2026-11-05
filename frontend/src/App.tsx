@@ -9,7 +9,6 @@ import { Skills } from './components/Skills';
 import { Projects } from './components/Projects';
 import { Experience } from './components/Experience';
 import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
 import { AdminModal } from './components/AdminModal';
 
 export const AppContent: React.FC = () => {
@@ -30,9 +29,6 @@ export const AppContent: React.FC = () => {
         <Experience />
         <Contact />
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       {/* Owner Customization Studio (Protected) */}
       <AdminModal />

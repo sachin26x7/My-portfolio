@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import confetti from 'canvas-confetti';
+import { MotionCard } from './MotionCard';
 import { 
   Mail, 
   Send, 
@@ -9,11 +10,12 @@ import {
   Copy, 
   Check, 
   MessageSquare,
-  Sparkles,
-  ArrowUpRight,
+  MailOpen,
   ExternalLink,
-  Info
+  Info,
+  LoaderCircle
 } from 'lucide-react';
+import { SocialIcon } from './SocialIcon';
 
 export const Contact: React.FC = () => {
   const { data } = usePortfolio();
@@ -133,10 +135,10 @@ export const Contact: React.FC = () => {
         
         {/* Left: Contact Info & Direct Email */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="p-8 rounded-2xl press-card space-y-6">
+          <MotionCard className="p-8 rounded-2xl press-card space-y-6">
             <h3 className="text-xl font-display font-bold text-white flex items-center gap-2">
               <span>Direct Communication</span>
-              <Sparkles className="w-4 h-4 text-primary-400" />
+              <MailOpen className="w-4 h-4 text-primary-400" />
             </h3>
             <p className="text-slate-400 text-sm leading-relaxed">
               I am actively checking my inbox and typically respond within 24 hours. Feel free to use the form or send an email directly.
@@ -198,22 +200,19 @@ export const Contact: React.FC = () => {
                     className="flex items-center justify-between p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.07] transition-all duration-200 text-sm font-medium text-slate-400 hover:text-primary-400"
                   >
                     <span>{soc.name}</span>
-                    <ArrowUpRight className="w-4 h-4 opacity-70" />
+                    <SocialIcon icon={soc.icon} className="w-4 h-4 opacity-70" />
                   </a>
                 ))}
               </div>
             </div>
 
-          </div>
+          </MotionCard>
         </div>
 
         {/* Right: Contact Form */}
         <div className="lg:col-span-7">
-          <form
-            onSubmit={handleSubmit}
-            noValidate
-            className="p-8 rounded-2xl press-card space-y-5"
-          >
+          <MotionCard className="p-8 rounded-2xl press-card">
+            <form onSubmit={handleSubmit} noValidate className="space-y-5">
             {/* Status alerts */}
             {status === 'success' && (
               <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-start gap-3 animate-fadeIn">
@@ -341,7 +340,7 @@ export const Contact: React.FC = () => {
             >
               {status === 'submitting' ? (
                 <>
-                  <span className="w-4 h-4 border-2 border-dark-950 border-t-transparent rounded-full animate-spin"></span>
+                  <LoaderCircle className="w-4 h-4 animate-spin" />
                   <span>Sending Message to Sachin...</span>
                 </>
               ) : (
@@ -351,7 +350,8 @@ export const Contact: React.FC = () => {
                 </>
               )}
             </button>
-          </form>
+            </form>
+          </MotionCard>
         </div>
 
       </div>

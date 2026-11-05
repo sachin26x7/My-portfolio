@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { Github, Linkedin, Mail, ArrowRight, Download, Terminal, Sparkles } from 'lucide-react';
+import { ArrowRight, Download, Terminal } from 'lucide-react';
+import { SocialIcon } from './SocialIcon';
+import { HeroEcosystem } from './HeroEcosystem';
 
 export const Hero: React.FC = () => {
   const { data } = usePortfolio();
@@ -52,7 +54,7 @@ export const Hero: React.FC = () => {
       frame = window.requestAnimationFrame(() => {
         frame = 0;
         const progress = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / section.offsetHeight));
-        const baseOpacity = window.innerWidth < 768 ? 0.28 : 0.5;
+        const baseOpacity = window.innerWidth < 768 ? 0.38 : window.innerWidth < 1024 ? 0.3 : 0.74;
         scene.style.setProperty('--hero-scroll-scale', (1 - progress * 0.16).toFixed(3));
         scene.style.setProperty('--hero-scroll-opacity', (baseOpacity * (1 - progress * 0.75)).toFixed(3));
         scene.style.setProperty('--hero-scroll-rotation', `${(progress * 14).toFixed(2)}deg`);
@@ -86,93 +88,52 @@ export const Hero: React.FC = () => {
     sceneRef.current?.style.removeProperty('--hero-tilt-y');
   };
 
-  const getSocialIcon = (iconType: string) => {
-    switch (iconType) {
-      case 'github': return <Github className="w-5 h-5" />;
-      case 'linkedin': return <Linkedin className="w-5 h-5" />;
-      case 'mail': return <Mail className="w-5 h-5" />;
-      default: return <Sparkles className="w-5 h-5" />;
-    }
-  };
-
   return (
     <section
       id="hero"
       ref={sectionRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative min-h-[92vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+      className="hero-stage relative flex min-h-[88svh] items-center pt-24 pb-16 px-4 sm:px-6 lg:px-8"
     >
-      <div
-        ref={sceneRef}
-        className="hero-3d-scene"
-        role="img"
-        aria-label={`Interactive 3D illustration of ${data.skills.slice(0, 3).map((category) => category.category).join(', ') || 'the developer technology stack'}`}
-      >
-        <div className="hero-scene-grid" />
-        <div className="hero-orbit hero-orbit-outer">
-          <span className="hero-orbit-point" />
-        </div>
-        <div className="hero-orbit hero-orbit-inner">
-          <span className="hero-orbit-point" />
-        </div>
-        <div className="hero-scene-glow" />
-        <div className="hero-prism-rig">
-          <div className="hero-prism">
-            <div className="hero-prism-face hero-prism-front">
-              <span className="hero-prism-mark">
-                {data.skills[0]?.skills[0]?.name || 'MERN'}
-              </span>
-              <span className="hero-prism-line" />
-              <span className="hero-prism-line hero-prism-line-short" />
-            </div>
-            <div className="hero-prism-face hero-prism-side" />
-            <div className="hero-prism-face hero-prism-top" />
-          </div>
-        </div>
-        {data.skills.slice(0, 3).map((category, index) => (
-          <div className={`hero-float-chip hero-float-chip-${index + 1}`} key={category.id}>
-            {category.category}
-          </div>
-        ))}
-      </div>
+      <HeroEcosystem sceneRef={sceneRef} />
 
-      <div className="max-w-4xl mx-auto text-center space-y-8 z-10">
+      <div className="hero-copy relative z-10 mx-auto w-full max-w-7xl space-y-7 text-center lg:text-left">
 
         {/* Kicker — "presents" label like reference image */}
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.05] backdrop-blur-sm">
+        <div className="hero-kicker mx-auto inline-flex w-fit max-w-full items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.05] px-4 py-1.5 backdrop-blur-sm lg:mx-0">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-slate-400">
+          <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.14em] sm:tracking-[0.2em] uppercase text-slate-400">
             Fresher · Actively Seeking Full Stack MERN Roles
           </span>
         </div>
 
         {/* Main Heading */}
-        <div className="space-y-2">
-          <h1 className="text-center leading-[0.72] tracking-[-0.085em] font-display font-black whitespace-nowrap text-[clamp(2.1rem,4.8vw,9.5rem)] text-gradient-coral" style={{ letterSpacing: '-0.06em', wordSpacing: '0.08em' }}>
+        <div className="space-y-3">
+          <h1 className="hero-title font-display font-black leading-[0.98] tracking-[-0.065em] text-gradient-coral text-[clamp(2.65rem,5.6vw,5.8rem)]">
             {data.name || 'Your Name'}
           </h1>
 
           {/* Typing Effect */}
-          <div className="flex items-center justify-center gap-3 text-2xl sm:text-3xl md:text-4xl font-semibold text-slate-300 min-h-[52px]">
-            <Terminal className="w-6 h-6 sm:w-8 sm:h-8 text-primary-400 inline-block shrink-0" />
-            <span className="font-mono text-white/90">
+          <div className="hero-role flex min-h-[3.25rem] items-center justify-center gap-2.5 text-slate-200 lg:justify-start sm:gap-3">
+            <Terminal className="w-5 h-5 sm:w-6 sm:h-6 text-primary-400 inline-block shrink-0" />
+            <span className="font-mono text-[clamp(1.05rem,2.4vw,2rem)] font-medium tracking-[-0.035em] text-white/90">
               {displayText}
-              <span className="inline-block w-2.5 h-6 sm:h-8 bg-primary-400 ml-1 translate-y-1 animate-pulse rounded-sm" />
+              <span className="hero-terminal-cursor ml-1 inline-block h-5 w-1.5 translate-y-0.5 rounded-sm bg-primary-400 sm:h-7" aria-hidden="true" />
             </span>
           </div>
         </div>
 
         {/* Tagline */}
-        <p className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-slate-400 leading-relaxed">
+        <p className="hero-tagline mx-auto max-w-[42rem] text-base leading-relaxed text-slate-300 sm:text-lg md:text-xl lg:mx-0">
           {data.tagline}
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+        <div className="hero-actions flex flex-wrap items-center justify-center gap-3 pt-1 lg:justify-start sm:gap-4">
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-semibold text-white btn-neon-coral focus:outline-none focus-visible:ring-2 focus-visible:ring-coral-500"
+            className="inline-flex min-h-12 items-center gap-2 rounded-xl px-6 py-3.5 font-semibold text-white btn-neon-coral transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950 sm:px-7"
           >
             <span>View Projects</span>
             <ArrowRight className="w-4 h-4" />
@@ -182,7 +143,7 @@ export const Hero: React.FC = () => {
             href={data.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-semibold text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/10 transition-all duration-200 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+            className="inline-flex min-h-12 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.07] px-6 py-3.5 font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.12] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950 sm:px-7"
           >
             <Download className="w-4 h-4 text-primary-400" />
             <span>Download CV</span>
@@ -190,7 +151,7 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Social Icons */}
-        <div className="pt-6 flex items-center justify-center gap-3">
+        <div className="hero-socials flex items-center justify-center gap-3 pt-3 lg:justify-start sm:gap-3.5">
           {data.socials.map((social) => {
             const href = social.icon === 'mail'
               ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(data.email)}&su=Portfolio%20Inquiry`
@@ -203,9 +164,9 @@ export const Hero: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.name}
-                className="p-3 rounded-xl bg-white/[0.06] text-slate-400 hover:text-white border border-white/[0.08] hover:border-primary-500/40 hover:bg-primary-500/10 transition-all duration-200 hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+                className="rounded-xl border border-white/[0.09] bg-white/[0.055] p-3 text-slate-400 transition-all duration-200 hover:-translate-y-1 hover:border-primary-500/40 hover:bg-primary-500/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950 sm:p-3.5"
               >
-                {getSocialIcon(social.icon)}
+                <SocialIcon icon={social.icon} className="w-5 h-5" />
               </a>
             );
           })}
