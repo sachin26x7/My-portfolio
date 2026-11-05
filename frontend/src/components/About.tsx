@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { Sparkles, MapPin, CheckCircle2, Cpu, Database, Code2 } from 'lucide-react';
+import { MotionCard } from './MotionCard';
 
 export const About: React.FC = () => {
   const { data } = usePortfolio();
@@ -49,27 +50,27 @@ export const About: React.FC = () => {
 
           {/* Focus Pillars — Glowing Icon Boxes */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-            <div className="p-5 rounded-2xl press-card hover:border-primary-500/20 transition-all duration-300 hover:-translate-y-1 space-y-3">
+            <MotionCard className="portfolio-card-3d p-5 rounded-2xl press-card hover:border-primary-500/20 transition-all duration-300 hover:-translate-y-1 space-y-3">
               <div className="w-10 h-10 icon-box-cyan flex items-center justify-center">
                 <Code2 className="w-5 h-5 text-white" />
               </div>
               <h4 className="font-display font-bold text-white text-sm">Frontend Engineering</h4>
               <p className="text-xs text-slate-400">React.js, Redux &amp; Tailwind CSS</p>
-            </div>
-            <div className="p-5 rounded-2xl press-card hover:border-purple-500/20 transition-all duration-300 hover:-translate-y-1 space-y-3">
+            </MotionCard>
+            <MotionCard className="portfolio-card-3d p-5 rounded-2xl press-card hover:border-purple-500/20 transition-all duration-300 hover:-translate-y-1 space-y-3">
               <div className="w-10 h-10 icon-box-purple flex items-center justify-center">
                 <Cpu className="w-5 h-5 text-white" />
               </div>
               <h4 className="font-display font-bold text-white text-sm">Node &amp; Express APIs</h4>
               <p className="text-xs text-slate-400">RESTful routing, JWT &amp; Middleware</p>
-            </div>
-            <div className="p-5 rounded-2xl press-card hover:border-emerald-500/20 transition-all duration-300 hover:-translate-y-1 space-y-3">
+            </MotionCard>
+            <MotionCard className="portfolio-card-3d p-5 rounded-2xl press-card hover:border-emerald-500/20 transition-all duration-300 hover:-translate-y-1 space-y-3">
               <div className="w-10 h-10 icon-box-emerald flex items-center justify-center">
                 <Database className="w-5 h-5 text-white" />
               </div>
               <h4 className="font-display font-bold text-white text-sm">MongoDB &amp; Storage</h4>
               <p className="text-xs text-slate-400">Mongoose schemas &amp; Aggregations</p>
-            </div>
+            </MotionCard>
           </div>
         </div>
 
@@ -111,9 +112,9 @@ export const About: React.FC = () => {
       <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {data.stats.map((stat, idx) => {
           return (
-            <div
+            <MotionCard
               key={stat.id}
-              className="p-6 rounded-2xl press-card hover:-translate-y-1 transition-all duration-300 group"
+              className="portfolio-card-3d p-6 rounded-2xl press-card hover:-translate-y-1 transition-all duration-300 group"
             >
               <div className={`w-2 h-2 rounded-full mb-3 ${idx % 4 === 0 ? 'bg-primary-400' : idx % 4 === 1 ? 'bg-neon-blue' : idx % 4 === 2 ? 'bg-neon-purple' : 'bg-coral-500'}`} />
               <div className="text-3xl sm:text-4xl font-display font-black text-white mb-1">
@@ -127,7 +128,7 @@ export const About: React.FC = () => {
                   {stat.description}
                 </div>
               )}
-            </div>
+            </MotionCard>
           );
         })}
       </div>
@@ -135,5 +136,3 @@ export const About: React.FC = () => {
     </section>
   );
 };
-
-

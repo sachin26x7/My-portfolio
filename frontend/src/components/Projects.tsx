@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { ExternalLink, Github, FolderGit2, Sparkles } from 'lucide-react';
+import { MotionCard } from './MotionCard';
 
 export const Projects: React.FC = () => {
   const { data } = usePortfolio();
@@ -25,12 +26,13 @@ export const Projects: React.FC = () => {
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {data.projects.map((project) => (
-          <div
+          <MotionCard
             key={project.id}
-            className="group flex flex-col rounded-2xl overflow-hidden press-card hover:border-white/15 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] hover:-translate-y-2 transition-all duration-300"
+            id={`project-${project.id}`}
+            className="project-card-3d group flex flex-col rounded-2xl press-card hover:border-white/15 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] transition-all duration-300"
           >
             {/* Thumbnail Image Container */}
-            <div className="relative h-48 w-full overflow-hidden bg-slate-900">
+            <div className="relative h-48 w-full overflow-hidden rounded-t-2xl bg-slate-900">
               <img
                 src={project.image}
                 alt={project.title}
@@ -107,7 +109,7 @@ export const Projects: React.FC = () => {
                 )}
               </div>
             </div>
-          </div>
+          </MotionCard>
         ))}
       </div>
 

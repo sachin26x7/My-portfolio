@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { Github, Linkedin, Mail, ArrowRight, Download, Terminal, Sparkles } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   const { data } = usePortfolio();
+  const sectionRef = useRef<HTMLElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
 
   // Typing animation state
   const [roleIndex, setRoleIndex] = useState(0);
@@ -38,6 +40,52 @@ export const Hero: React.FC = () => {
     return () => clearTimeout(timer);
   }, [displayText, isDeleting, roleIndex, roles]);
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    const scene = sceneRef.current;
+    if (!section || !scene || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let frame = 0;
+    const updateScrollProgress = () => {
+      if (frame) return;
+
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const progress = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / section.offsetHeight));
+        const baseOpacity = window.innerWidth < 768 ? 0.28 : 0.5;
+        scene.style.setProperty('--hero-scroll-scale', (1 - progress * 0.16).toFixed(3));
+        scene.style.setProperty('--hero-scroll-opacity', (baseOpacity * (1 - progress * 0.75)).toFixed(3));
+        scene.style.setProperty('--hero-scroll-rotation', `${(progress * 14).toFixed(2)}deg`);
+        scene.style.setProperty('--hero-scroll-offset', `${(progress * 40).toFixed(2)}px`);
+      });
+    };
+
+    updateScrollProgress();
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    window.addEventListener('resize', updateScrollProgress);
+
+    return () => {
+      window.removeEventListener('scroll', updateScrollProgress);
+      window.removeEventListener('resize', updateScrollProgress);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
+    if (event.pointerType !== 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const pointerX = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const pointerY = (event.clientY - bounds.top) / bounds.height - 0.5;
+    sceneRef.current?.style.setProperty('--hero-tilt-x', `${(-pointerY * 12).toFixed(2)}deg`);
+    sceneRef.current?.style.setProperty('--hero-tilt-y', `${(pointerX * 16).toFixed(2)}deg`);
+  };
+
+  const handlePointerLeave = () => {
+    sceneRef.current?.style.removeProperty('--hero-tilt-x');
+    sceneRef.current?.style.removeProperty('--hero-tilt-y');
+  };
+
   const getSocialIcon = (iconType: string) => {
     switch (iconType) {
       case 'github': return <Github className="w-5 h-5" />;
@@ -48,7 +96,47 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-[92vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <section
+      id="hero"
+      ref={sectionRef}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="relative min-h-[92vh] flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+    >
+      <div
+        ref={sceneRef}
+        className="hero-3d-scene"
+        role="img"
+        aria-label={`Interactive 3D illustration of ${data.skills.slice(0, 3).map((category) => category.category).join(', ') || 'the developer technology stack'}`}
+      >
+        <div className="hero-scene-grid" />
+        <div className="hero-orbit hero-orbit-outer">
+          <span className="hero-orbit-point" />
+        </div>
+        <div className="hero-orbit hero-orbit-inner">
+          <span className="hero-orbit-point" />
+        </div>
+        <div className="hero-scene-glow" />
+        <div className="hero-prism-rig">
+          <div className="hero-prism">
+            <div className="hero-prism-face hero-prism-front">
+              <span className="hero-prism-mark">
+                {data.skills[0]?.skills[0]?.name || 'MERN'}
+              </span>
+              <span className="hero-prism-line" />
+              <span className="hero-prism-line hero-prism-line-short" />
+            </div>
+            <div className="hero-prism-face hero-prism-side" />
+            <div className="hero-prism-face hero-prism-top" />
+          </div>
+        </div>
+        {data.skills.slice(0, 3).map((category, index) => (
+          <div className={`hero-float-chip hero-float-chip-${index + 1}`} key={category.id}>
+            {category.category}
+          </div>
+        ))}
+      </div>
+
       <div className="max-w-4xl mx-auto text-center space-y-8 z-10">
 
         {/* Kicker — "presents" label like reference image */}

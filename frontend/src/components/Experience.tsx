@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { Briefcase, GraduationCap, Calendar, MapPin, Milestone } from 'lucide-react';
+import { MotionCard } from './MotionCard';
 
 export const Experience: React.FC = () => {
   const { data } = usePortfolio();
@@ -38,7 +39,7 @@ export const Experience: React.FC = () => {
               </div>
 
               {/* Card Content */}
-              <div className="p-6 sm:p-7 rounded-2xl press-card hover:border-white/15 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)] transition-all duration-200">
+              <MotionCard className="portfolio-card-3d p-6 sm:p-7 rounded-2xl press-card hover:border-white/15 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)] transition-all duration-200">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                   <div>
                     <h3 className="text-xl font-display font-bold text-white group-hover:text-primary-400 transition-colors">
@@ -72,7 +73,7 @@ export const Experience: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </MotionCard>
             </div>
           );
         })}

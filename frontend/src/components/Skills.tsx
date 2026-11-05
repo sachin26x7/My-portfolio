@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
+import { MotionCard } from './MotionCard';
 import { 
   Code, 
   BrainCircuit, 
@@ -12,6 +13,7 @@ import {
 
 export const Skills: React.FC = () => {
   const { data, openAdminModal, isOwner } = usePortfolio();
+  const [selectedSkill, setSelectedSkill] = useState<{ categoryId: string; name: string } | null>(null);
 
   const getCategoryIcon = (category: string) => {
     const lower = category.toLowerCase();
@@ -79,11 +81,22 @@ export const Skills: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {data.skills.map((cat) => (
-            <div
-              key={cat.id}
-              className="p-6 sm:p-8 rounded-2xl press-card hover:border-white/15 hover:-translate-y-1.5 transition-all duration-300 group"
-            >
+          {data.skills.map((cat) => {
+            const selectedSkillForCategory = selectedSkill?.categoryId === cat.id
+              ? cat.skills.find((skill) => skill.name === selectedSkill.name)
+              : undefined;
+            const relatedProjects = selectedSkillForCategory
+              ? data.projects.filter((project) =>
+                project.tags.some((tag) => tag.trim().toLowerCase() === selectedSkillForCategory.name.trim().toLowerCase())
+              )
+              : [];
+
+            return (
+              <MotionCard
+                key={cat.id}
+                id={`skill-category-${cat.id}`}
+                className="portfolio-card-3d p-6 sm:p-8 rounded-2xl press-card hover:border-white/15 hover:-translate-y-1.5 transition-all duration-300 group"
+              >
               <div className="flex items-start gap-4 mb-5">
                 <div className={`w-12 h-12 flex items-center justify-center ${getIconBoxClass(cat.category)} group-hover:scale-105 transition-transform duration-200`}>
                   {getCategoryIcon(cat.category)}
@@ -96,27 +109,86 @@ export const Skills: React.FC = () => {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2 pt-2">
-                {cat.skills.map((skill, sIdx) => (
-                  <div
-                    key={sIdx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium bg-white/[0.05] text-slate-300 border border-white/[0.07] hover:border-primary-500/40 hover:text-primary-400 hover:bg-primary-500/[0.08] transition-all duration-150"
-                  >
-                    <CheckCircle className="w-3.5 h-3.5 text-primary-400 opacity-80" />
-                    <span>{skill.name}</span>
-                    {skill.level && (
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.07] text-slate-500 ml-1">
-                        {skill.level}
-                      </span>
-                    )}
-                  </div>
-                ))}
+                {cat.skills.map((skill, sIdx) => {
+                  const isSelected = selectedSkill?.categoryId === cat.id && selectedSkill.name === skill.name;
+
+                  return (
+                    <button
+                      key={sIdx}
+                      type="button"
+                      aria-expanded={isSelected}
+                      aria-controls={`skill-details-${cat.id}`}
+                      aria-label={`Show projects using ${skill.name}`}
+                      onClick={() => setSelectedSkill(isSelected ? null : { categoryId: cat.id, name: skill.name })}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium border transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 ${
+                        isSelected
+                          ? 'bg-primary-500/15 text-primary-300 border-primary-500/50'
+                          : 'bg-white/[0.05] text-slate-300 border-white/[0.07] hover:border-primary-500/40 hover:text-primary-400 hover:bg-primary-500/[0.08]'
+                      }`}
+                    >
+                      <CheckCircle className="w-3.5 h-3.5 text-primary-400 opacity-80" />
+                      <span>{skill.name}</span>
+                      {skill.level && (
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.07] text-slate-500 ml-1">
+                          {skill.level}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-            </div>
-          ))}
+              <div
+                id={`skill-details-${cat.id}`}
+                hidden={!selectedSkillForCategory}
+                className="mt-5 rounded-xl border border-primary-500/20 bg-primary-500/[0.06] p-4"
+                aria-live="polite"
+              >
+                {selectedSkillForCategory && (
+                  <>
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-semibold text-white">{selectedSkillForCategory.name}</p>
+                        <p className="mt-1 text-xs text-slate-400">
+                          {cat.description}
+                          {selectedSkillForCategory.level && ` · ${selectedSkillForCategory.level}`}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedSkill(null)}
+                        aria-label={`Close ${selectedSkillForCategory.name} details`}
+                        className="shrink-0 rounded-lg px-2 py-1 text-xs text-slate-400 hover:bg-white/[0.08] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-400"
+                      >
+                        Close
+                      </button>
+                    </div>
+                    {relatedProjects.length > 0 ? (
+                      <div className="mt-4">
+                        <p className="mb-2 text-[10px] font-mono uppercase tracking-[0.16em] text-slate-500">Used in these projects</p>
+                        <div className="flex flex-wrap gap-2">
+                          {relatedProjects.map((project) => (
+                            <a
+                              key={project.id}
+                              href={`#project-${project.id}`}
+                              className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-2.5 py-1.5 text-xs text-slate-300 transition-colors hover:border-primary-500/40 hover:text-primary-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-400"
+                            >
+                              {project.title}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="mt-3 text-xs text-slate-400">No project currently lists this exact technology.</p>
+                    )}
+                  </>
+                )}
+              </div>
+              </MotionCard>
+            );
+          })}
         </div>
       )}
 
     </section>
   );
 };
-
