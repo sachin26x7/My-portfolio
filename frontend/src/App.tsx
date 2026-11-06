@@ -21,7 +21,7 @@ export const AppContent: React.FC = () => {
       <Navbar />
 
       {/* Main Single-Page Sections */}
-      <main className="relative z-10 space-y-8">
+      <main className="relative z-10">
         <Hero />
         <About />
         <Skills />

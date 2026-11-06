@@ -8,10 +8,10 @@ export const About: React.FC = () => {
   const { data } = usePortfolio();
 
   return (
-    <section id="about" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="about" className="portfolio-section flex flex-col justify-center py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
 
       {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+      <div className="text-center max-w-3xl mx-auto mb-10 space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.05] backdrop-blur-sm">
           <UserRound className="w-3.5 h-3.5 text-primary-400" />
           <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-slate-400">About Me</span>
@@ -110,7 +110,7 @@ export const About: React.FC = () => {
       </div>
 
       {/* Stat Counters — Glowing Presentation Cards */}
-      <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      <div className="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {data.stats.map((stat, idx) => {
           return (
             <MotionCard

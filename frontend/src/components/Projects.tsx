@@ -8,10 +8,10 @@ export const Projects: React.FC = () => {
   const { data } = usePortfolio();
 
   return (
-    <section id="projects" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="projects" className="portfolio-section flex flex-col justify-center py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       
       {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+      <div className="text-center max-w-3xl mx-auto mb-10 space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.05] backdrop-blur-sm">
           <FolderGit2 className="w-3.5 h-3.5 text-primary-400" />
           <span className="text-[11px] font-mono tracking-[0.2em] uppercase text-slate-400">Featured Portfolio</span>

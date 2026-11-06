@@ -119,7 +119,7 @@ export const initialPortfolioData: ProfileData = {
       skills: [
         { name: "Git & GitHub", level: "Advanced" },
         { name: "Postman (API Testing)", level: "Advanced" },
-        { name: "Vercel & Render", level: "Proficient" },
+        { name: "Netlify & Render", level: "Proficient" },
         { name: "VS Code & Chrome DevTools", level: "Expert" },
         { name: "Data Structures & Algos", level: "Proficient" },
         { name: "Linux / Terminal", level: "Intermediate" }
@@ -220,7 +220,7 @@ export const initialPortfolioData: ProfileData = {
       highlights: [
         "Mastered advanced React concepts: Custom Hooks, Context API, Redux Toolkit, and performance optimization.",
         "Created RESTful endpoints with Express.js, validated request bodies, and designed relational schemas with Mongoose ODM.",
-        "Utilized Git & GitHub for feature-branch workflows, pull requests, and automated deployments to Vercel and Render."
+        "Utilized Git & GitHub for feature-branch workflows, pull requests, and automated deployments to Netlify and Render."
       ]
     },
     {
